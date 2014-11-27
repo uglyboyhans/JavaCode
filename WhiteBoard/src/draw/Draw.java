@@ -1,5 +1,6 @@
 package draw;
 
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -11,10 +12,8 @@ import java.util.Vector;
 
 import javax.swing.JPanel;
 
-import object.Client;
 
-
-public class Draw extends JPanel{
+public class Draw extends Canvas{
 	private  int mark = 0;//1=line 2=rect 3=circle 4=random
 	private  int X1 = 0;
 	private  int Y1 = 0;
@@ -22,7 +21,7 @@ public class Draw extends JPanel{
 	private  int Y2 = 0;//position
 	private boolean isDrag = true;
 	private boolean isMyselfSend = false;
-	public static Color color = new Color(200,0,0);
+	public static Color color = new Color(150,0,0);
 	/*vector saves points*/
 	private Vector<Point> lineStart = new  Vector<Point>();
 	private Vector<Point> lineEnd = new  Vector<Point>();
@@ -31,19 +30,21 @@ public class Draw extends JPanel{
 	private Vector<Point> circleStart = new  Vector<Point>();
 	private Vector<Point> circleEnd = new  Vector<Point>();
 	private Vector<Point> points = new  Vector<Point>();
-	private Client talk = new Client();
+	//private Client user = new Client();
 	
 	
-	/**
-	 * @wbp.parser.entryPoint
-	 */
+	
 	public Draw() {
 		super();
-		addMouseListener(new MouseAdapter() {
+		this.setSize(394, 321);
+		this.setBackground(Color.white);
+		this.setLocation(259, 51);
+		this.setVisible(true);
+		addMouseListener(new MouseAdapter() {// set each kinds of points by mark
 			public void mousePressed(MouseEvent e) {	
 				X1 = e.getX();
 				Y1 = e.getY();
-				talk.sendP("mark="+mark+" 1 "+X1+" "+Y1);//mark=_  1/2  x  y
+				//user.setMark("mark="+mark+" 1 "+X1+" "+Y1);
 				isMyselfSend = true;
 			}
 			public void mouseReleased(MouseEvent e){
@@ -52,22 +53,22 @@ public class Draw extends JPanel{
 				if(mark == 1){
 					lineStart.add(new Point(X1,Y1));
 					lineEnd.add(new Point(X2,Y2));
-					talk.sendP("mark="+mark+" 2 "+X2+" "+Y2);//mark=_  1/2  x  y
+				//	user.setMark("mark="+mark+" 2 "+X2+" "+Y2);
 					isMyselfSend = true;
 				}
 				if(mark ==2 ){
 					rectStart.add(new Point(X1,Y1));
 					rectEnd.add(new Point(X2,Y2));
-					talk.sendP("mark="+mark+" 2 "+X2+" "+Y2);//mark=_  1/2  x  y
+				//	user.setMark("mark="+mark+" 2 "+X2+" "+Y2);
 					isMyselfSend = true;
 				}else if(mark ==3){
 					circleStart.add(new Point(X1,Y1));
 					circleEnd.add(new Point(X2,Y2));
-					talk.sendP("mark="+mark+" 2 "+X2+" "+Y2);//mark=_  1/2  x  y
+				//	user.setMark("mark="+mark+" 2 "+X2+" "+Y2);
 					isMyselfSend = true;
 				}
 				if(mark == 4){
-					talk.sendP("mark="+mark+" 3 "+X2+" "+Y2);
+				//	user.setMark("mark="+mark+" 3 "+X2+" "+Y2);
 					isMyselfSend = true;
 					points.add(new Point(X2,Y2));
 					points.add(new Point(X2,Y2));
@@ -82,17 +83,15 @@ public class Draw extends JPanel{
 				isDrag = false;
 				X2 = e.getX();
 				Y2 = e.getY();
-				//time = (time+1)%5;
-				//talk.sendP("mark="+5+" 2 "+X2+" "+Y2);//mark=_  1/2  x  y
 				if(mark == 4 ){
 					points.add(new Point(X2,Y2));
-					talk.sendP("mark="+mark+" 2 "+X2+" "+Y2);//mark=_  1/2  x  y
+				//	user.setMark("mark="+mark+" 2 "+X2+" "+Y2);//mark=_  1/2  x  y
 					isMyselfSend = true;
 				}
 				repaint();
 			}
 		});
-		Thread thread = new Thread(){
+		Thread thread = new Thread(){//thread for repaint
 			public void run() {
 				repaint();
 			}
@@ -101,6 +100,10 @@ public class Draw extends JPanel{
 		
 	}
 	
+	public void setMark(int mark) {
+		this.mark = mark;
+	}
+
 	public void paint (Graphics g){
 		Font f1 = new Font("TimesRoman",Font.BOLD,40);
 		g.setColor(color);
@@ -132,7 +135,8 @@ public class Draw extends JPanel{
 			}
 		}
 		
-	}
+	}//end paint()
+	
 	public void clear() {
 		lineStart.removeAllElements();
 		lineEnd.removeAllElements();
@@ -141,10 +145,10 @@ public class Draw extends JPanel{
 		circleStart.removeAllElements();
 		circleEnd.removeAllElements();
 		points.removeAllElements();
-		talk.sendP("clear");
+		//user.setMark("clear");
 		isMyselfSend = true;
 		repaint();
-	}
+	}//end clear
 	
 	
 }

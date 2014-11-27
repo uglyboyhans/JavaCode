@@ -4,7 +4,7 @@ package object;
 import java.awt.Color;
 import java.awt.Dimension;
 
-import draw.*;
+import draw.Draw;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SpringLayout;
 import javax.swing.WindowConstants;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
@@ -25,6 +26,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Date;
+import java.awt.event.ActionListener;
 
 public class Client extends JPanel {
 	private  Socket socket = null;
@@ -33,9 +35,10 @@ public class Client extends JPanel {
 	private JTextArea textArea;//input
 	private JButton btnStart;
 	private JTextArea textArea_1;//output
-	private JPanel painter;//painter
+	private Draw painter;//painter
 	private BufferedReader reader;
 	private PrintWriter printWriter;
+	private int mark=0;
 	
 	public Client() {
 		setPreferredSize(new Dimension(750, 450));
@@ -55,6 +58,13 @@ public class Client extends JPanel {
 			}
 		});
 
+		painter = new Draw();
+		painter.setBackground(Color.white);
+		painter.setMark(4);
+		painter.setSize(394, 321);
+		painter.setLocation(259, 51);
+		painter.setVisible(true);
+		
 		btnStart = new JButton("Start");
 		btnStart.addMouseListener(new MouseAdapter() {
 			@Override
@@ -77,6 +87,7 @@ public class Client extends JPanel {
 				Thread thread = new Thread(){
 					public void run() {
 						while (socket != null) {
+							
 							//painter
 							//painter
 							//painter
@@ -84,6 +95,8 @@ public class Client extends JPanel {
 							//painter
 							//painter
 							//painter
+							
+							
 							String msg;
 							try {
 								while ((msg = reader.readLine()) != null) {
@@ -106,10 +119,32 @@ public class Client extends JPanel {
 		textArea_1 = new JTextArea();
 		textArea_1.setEditable(false);
 		textArea_1.setColumns(10);
-		painter = new JPanel();
-		painter.setBackground(Color.white);
+		
 
-		JComboBox comboBox = new JComboBox();
+		String[] s={"line","rect","circle","random"};
+		JComboBox comboBox = new JComboBox(s);
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 if (e.getSource() == comboBox) {
+					   int index = comboBox.getSelectedIndex();
+					   switch (index) {
+					   case 0:
+						   painter.setMark(1);
+					    break;
+					   case 1:
+						   painter.setMark(2);
+					    break;
+					   case 2:
+						   painter.setMark(3);
+					    break;
+					   case 3:
+						   painter.setMark(4);
+						   break;
+					   }
+					  }
+			}
+		});
+		
 		
 		SpringLayout springLayout = new SpringLayout();
 		springLayout.putConstraint(SpringLayout.WEST, textArea, 27, SpringLayout.WEST, this);
@@ -160,5 +195,12 @@ public class Client extends JPanel {
 		frame.pack();
 		frame.setVisible(true);
 
+	}
+
+	public void setMark(String string) {
+		if(mark ==0 ) return;
+		printWriter.println(string);
+		printWriter.flush();
+		
 	}
 }
