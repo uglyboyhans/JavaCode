@@ -9,28 +9,26 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.Vector;
-
-import javax.swing.JPanel;
+import object.Client;
 
 
 public class Draw extends Canvas{
-	private  int mark = 0;//1=line 2=rect 3=circle 4=random
-	private  int X1 = 0;
-	private  int Y1 = 0;
-	private  int X2 = 0;
-	private  int Y2 = 0;//position
+	public  int mark = 0;//1=line 2=rect 3=circle 4=random
+	public  int X1 = 0;
+	public  int Y1 = 0;
+	public  int X2 = 0;
+	public  int Y2 = 0;//position
 	private boolean isDrag = true;
-	private boolean isMyselfSend = false;
-	public static Color color = new Color(150,0,0);
+	public boolean isMyselfSend = false;
+	public static Color color = new Color(150,110,110);
 	/*vector saves points*/
-	private Vector<Point> lineStart = new  Vector<Point>();
-	private Vector<Point> lineEnd = new  Vector<Point>();
-	private Vector<Point> rectStart = new  Vector<Point>();
-	private Vector<Point> rectEnd = new  Vector<Point>();
-	private Vector<Point> circleStart = new  Vector<Point>();
-	private Vector<Point> circleEnd = new  Vector<Point>();
-	private Vector<Point> points = new  Vector<Point>();
-	//private Client user = new Client();
+	public Vector<Point> lineStart = new  Vector<Point>();
+	public Vector<Point> lineEnd = new  Vector<Point>();
+	public Vector<Point> rectStart = new  Vector<Point>();
+	public Vector<Point> rectEnd = new  Vector<Point>();
+	public Vector<Point> circleStart = new  Vector<Point>();
+	public Vector<Point> circleEnd = new  Vector<Point>();
+	public Vector<Point> points = new  Vector<Point>();
 	
 	
 	
@@ -44,7 +42,7 @@ public class Draw extends Canvas{
 			public void mousePressed(MouseEvent e) {	
 				X1 = e.getX();
 				Y1 = e.getY();
-				//user.setMark("mark="+mark+" 1 "+X1+" "+Y1);
+				Client.setMark("mark= "+mark+" 1 "+X1+" "+Y1);
 				isMyselfSend = true;
 			}
 			public void mouseReleased(MouseEvent e){
@@ -53,22 +51,22 @@ public class Draw extends Canvas{
 				if(mark == 1){
 					lineStart.add(new Point(X1,Y1));
 					lineEnd.add(new Point(X2,Y2));
-				//	user.setMark("mark="+mark+" 2 "+X2+" "+Y2);
+				    Client.setMark("mark= "+mark+" 2 "+X2+" "+Y2);
 					isMyselfSend = true;
 				}
 				if(mark ==2 ){
 					rectStart.add(new Point(X1,Y1));
 					rectEnd.add(new Point(X2,Y2));
-				//	user.setMark("mark="+mark+" 2 "+X2+" "+Y2);
+					Client.setMark("mark= "+mark+" 2 "+X2+" "+Y2);
 					isMyselfSend = true;
 				}else if(mark ==3){
 					circleStart.add(new Point(X1,Y1));
 					circleEnd.add(new Point(X2,Y2));
-				//	user.setMark("mark="+mark+" 2 "+X2+" "+Y2);
+					Client.setMark("mark= "+mark+" 2 "+X2+" "+Y2);
 					isMyselfSend = true;
 				}
 				if(mark == 4){
-				//	user.setMark("mark="+mark+" 3 "+X2+" "+Y2);
+					Client.setMark("mark= "+mark+" 3 "+X2+" "+Y2);
 					isMyselfSend = true;
 					points.add(new Point(X2,Y2));
 					points.add(new Point(X2,Y2));
@@ -85,7 +83,7 @@ public class Draw extends Canvas{
 				Y2 = e.getY();
 				if(mark == 4 ){
 					points.add(new Point(X2,Y2));
-				//	user.setMark("mark="+mark+" 2 "+X2+" "+Y2);//mark=_  1/2  x  y
+					Client.setMark("mark= "+mark+" 2 "+X2+" "+Y2);
 					isMyselfSend = true;
 				}
 				repaint();
@@ -145,10 +143,15 @@ public class Draw extends Canvas{
 		circleStart.removeAllElements();
 		circleEnd.removeAllElements();
 		points.removeAllElements();
-		//user.setMark("clear");
+		Client.setMark("clear");
 		isMyselfSend = true;
 		repaint();
 	}//end clear
+
+	public void repaintAll() {
+		repaint();
+		
+	}
 	
 	
 }
